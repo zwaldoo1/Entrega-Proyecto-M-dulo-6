@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contacto</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Contacto del Desarrollador</h1>
+      <nav>
+        <a href="/">Inicio</a>
+        <a href="/about">Acerca de</a>
+        <a href="/contact">Contacto</a>
+      </nav>
+    </header>
+
+    <section class="card">
+      <h2>Información</h2>
+      <p><strong>Nombre:</strong> Francisco</p>
+      <p><strong>Proyecto:</strong> Entrega ABP Módulo 6</p>
+      <p><strong>Tecnología principal:</strong> Node.js + Express</p>
+      <p><strong>Repositorio:</strong> Agregar enlace de GitHub aquí</p>
+    </section>
+
+    <section class="card">
+      <h2>Formulario de contacto</h2>
+
+      <form id="contactForm">
+        <label for="nombre">Nombre</label>
+        <input type="text" id="nombre" name="nombre" placeholder="Ingresa tu nombre">
+
+        <label for="correo">Correo</label>
+        <input type="email" id="correo" name="correo" placeholder="Ingresa tu correo">
+
+        <label for="mensaje">Mensaje</label>
+        <textarea id="mensaje" name="mensaje" rows="5" placeholder="Escribe tu mensaje"></textarea>
+
+        <button type="submit">Enviar formulario</button>
+      </form>
+
+      <div id="resultado" class="result-box"></div>
+    </section>
+  </div>
+
+  <script>
+    const form = document.getElementById('contactForm');
+    const resultado = document.getElementById('resultado');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const nombre = document.getElementById('nombre').value.trim();
+      const correo = document.getElementById('correo').value.trim();
+      const mensaje = document.getElementById('mensaje').value.trim();
+
+      try {
+        const response = await fetch('/contact', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ nombre, correo, mensaje })
+        });
+
+        const data = await response.json();
+
+        resultado.innerHTML = `
+          <h3>Respuesta del servidor</h3>
+          <pre>${JSON.stringify(data, null, 2)}</pre>
+        `;
+
+        if (response.ok) {
+          form.reset();
+        }
+      } catch (error) {
+        resultado.innerHTML = `
+          <h3>Error</h3>
+          <pre>No fue posible enviar el formulario.</pre>
+        `;
+      }
+    });
+  </script>
+</body>
+</html>
